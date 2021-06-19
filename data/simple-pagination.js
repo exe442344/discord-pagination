@@ -1,17 +1,15 @@
 const { MessageButton, MessageActionRow } = require("discord-buttons");
 
-async function createSlider(
+async function createSimpleSlider(
   userID,
   channel,
   embeds,
-  emoji = ["◀️", "▶️", "❌"],
+  emoji = ["◀️", "▶️"],
   time = 60000
 ) {
   const button_back = new MessageButton().setStyle("grey").setID("back");
 
   const button_next = new MessageButton().setStyle("grey").setID("next");
-
-  const button_x = new MessageButton().setStyle("grey").setID("x");
 
   const button_back_disabled = new MessageButton()
     .setStyle("grey")
@@ -26,20 +24,17 @@ async function createSlider(
   if (emoji[0] && emoji[1]) {
     button_back.setEmoji(emoji[0]);
     button_next.setEmoji(emoji[1]);
-    button_x.setEmoji(emoji[2]);
     button_back_disabled.setEmoji(emoji[0]);
     button_next_disabled.setEmoji(emoji[1]);
   } else {
     button_back.setLabel("<");
     button_next.setLabel(">");
-    button_x.setLabel("x");
     button_back_disabled.setLabel("<");
     button_next_disabled.setLabel(">");
   }
 
   const buttonsActive = new MessageActionRow().addComponents([
     button_back,
-    button_x,
     button_next,
   ]);
 
@@ -60,6 +55,7 @@ async function createSlider(
 
       if (button.clicker.user.id == userID) {
         if (button.id == "back") {
+          button.defer(true);
           if (currentPage !== 0) {
             --currentPage;
             msg.edit({ embed: embeds[currentPage], components: buttonsActive });
@@ -68,6 +64,7 @@ async function createSlider(
             msg.edit({ embed: embeds[currentPage], components: buttonsActive });
           }
         } else if (button.id == "next") {
+          button.defer(true);
           if (currentPage < embeds.length - 1) {
             currentPage++;
             msg.edit({ embed: embeds[currentPage], components: buttonsActive });
@@ -75,16 +72,20 @@ async function createSlider(
             currentPage = 0;
             msg.edit({ embed: embeds[currentPage], components: buttonsActive });
           }
-        } else if (button.id == "x") {
-          msg.delete();
         }
       }
     });
     collector.on("end", (collected) => {
+      if (msg) {
+        msg.edit({
+          embed: embeds[currentPage],
+          components: buttonsDisabled,
+        });
+      }
       console.log("discord-epagination => Ended Collector");
     });
     collector.on("error", (e) => console.log(e));
   });
 }
 
-module.exports = createSlider;
+module.exports = createSimpleSlider;

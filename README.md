@@ -25,24 +25,60 @@ require("discord-buttons")(client); // !!! must be below your Discord.Client()
 ## Method
 
 ```js
-createSlider(userID, channel, embedsArray, emojiArray, time);
+createSimpleSlider(userID, channel, embedsArray, emojiArray, time);
 ```
 
-- userID : the id of the user you want to have access to interact with buttons, eg: `message.author.id`
-- channel: the channel where you want the message to be sent, eg: `message.channel`
-- embedsArray : all your embeds (need to be in order of the pages you want !). eg: `[embed1, embed2]`
-- emojiArray : all emojis that need to be in the buttons, by default those are : `["◀️", "▶️", "❌"]`
-- time : the time you want your buttons to be interractable (in milliseconds !), by default it's set to `60000` so `60 seconds`
+- userID (String) : the id of the user you want to have access to interact with buttons, eg: `message.author.id`
+- channel (String) : the channel where you want the message to be sent, eg: `message.channel`
+- embedsArray (Array) : all your embeds (need to be in order of the pages you want !). eg: `[embed1, embed2]`
+- emojiArray (Array) : all emojis that need to be in the buttons, by default those are : `["◀️", "▶️"]`
+- time (Number) : the time you want your buttons to be interractable (in milliseconds !), by default it's set to `60000` so `60 seconds`
+
+---
+
+```js
+createAdvancedSlider(
+  userID,
+  channel,
+  embedsArray,
+  emojiArray,
+  msgDelete,
+  backMainEmbed,
+  time
+);
+```
+
+- userID (String) : the id of the user you want to have access to interact with buttons, eg: `message.author.id`
+- channel (String) : the channel where you want the message to be sent, eg: `message.channel`
+- embedsArray (Array) : all your embeds (need to be in order of the pages you want !). eg: `[embed1, embed2]`
+- msgDelete (Boolean) : add a X button that delete the embed when clicked.
+- backMainEmbed (Boolean) : add a ↩ button that edit the embed to the first in the array (main embed).
+- emojiArray (Array) : all emojis that need to be in the buttons, by default those are : `["◀️", "▶️", "❌", "↩"]`
+- time (Number) : the time you want your buttons to be interractable (in milliseconds !), by default it's set to `60000` so `60 seconds`
 
 ## Example
 
 ```js
-const { createSlider } = require("discord-epagination");
-createSlider(
+const {
+  createSimpleSlider,
+  createAdvancedSlider,
+} = require("discord-epagination");
+
+createSimpleSlider(
   message.author.id,
   message.channel,
   [embed0, embed1, embed2, embed3],
-  ["<<", ">>", "x"],
+  ["◀️", "▶️"],
+  30000
+);
+
+createAdvancedSlider(
+  message.author.id,
+  message.channel,
+  [embed0, embed1, embed2, embed3],
+  true,
+  true,
+  ["◀️", "▶️", "❌", "↩"],
   30000
 );
 ```
