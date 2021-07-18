@@ -43,7 +43,7 @@ async function createSimpleSlider(
     button_next_disabled,
   ]);
 
-  channel.send({ embed: embeds[0], components: buttonsActive }).then((msg) => {
+  channel.send({ embed: embeds[0], components: buttonsActive }).then((message) => {
     const collector = message.createButtonCollector((button) => userID === userID, {
       time: time,
     });
