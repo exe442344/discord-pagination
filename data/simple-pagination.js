@@ -43,8 +43,8 @@ async function createSimpleSlider(
     button_next_disabled,
   ]);
 
-  channel.send({ embed: embeds[0], components: buttonsActive }).then((msg) => {
-    const collector = msg.createButtonCollector((button) => userID === userID, {
+  channel.send({ embed: embeds[0], components: buttonsActive }).then((message) => {
+    const collector = message.createButtonCollector((button) => userID === userID, {
       time: time,
     });
 
@@ -58,26 +58,26 @@ async function createSimpleSlider(
           button.defer(true);
           if (currentPage !== 0) {
             --currentPage;
-            msg.edit({ embed: embeds[currentPage], components: buttonsActive });
+            message.edit({ embed: embeds[currentPage], components: buttonsActive });
           } else {
             currentPage = embeds.length - 1;
-            msg.edit({ embed: embeds[currentPage], components: buttonsActive });
+            message.edit({ embed: embeds[currentPage], components: buttonsActive });
           }
         } else if (button.id == "next") {
           button.defer(true);
           if (currentPage < embeds.length - 1) {
             currentPage++;
-            msg.edit({ embed: embeds[currentPage], components: buttonsActive });
+            message.edit({ embed: embeds[currentPage], components: buttonsActive });
           } else {
             currentPage = 0;
-            msg.edit({ embed: embeds[currentPage], components: buttonsActive });
+            message.edit({ embed: embeds[currentPage], components: buttonsActive });
           }
         }
       }
     });
     collector.on("end", (collected) => {
-      if (msg) {
-        msg.edit({
+      if (message) {
+        message.edit({
           embed: embeds[currentPage],
           components: buttonsDisabled,
         });
